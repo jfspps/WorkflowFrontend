@@ -1,7 +1,6 @@
 # Workflow frontend prototype #
 
-This serves as a Spring-Security backed frontend to the Workflow engine (such as Camunda) and performs REST API calls in order to 
-navigate the BPMN2 processes.
+This originally serves as a Spring-Security backed frontend to the Workflow engine (such as Camunda) though can be modified to interface with other web services as desired.
 
 ## HTML5 PUT/DELETE ##
 

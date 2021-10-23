@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/header :: baseHead(~{::title})">
+    <title>Company Name</title>
+</head>
+<body>
+<nav th:replace="fragments/navNoSearch :: nav"></nav>
+
+<div class="container">
+    <div class="row">
+        <div class="row-md-12">
+            <h1>Company Name Workflow</h1>
+
+            <p>You are logged in with <b>ID:</b> <span th:text="${userID}"></span> and <b>username:</b> <span
+                    sec:authentication="name"></span></p>
+            <p><b>Your permissions:</b> <span sec:authentication="principal.authorities"></span></p>
+            <hr>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+
+</body>
+</html>

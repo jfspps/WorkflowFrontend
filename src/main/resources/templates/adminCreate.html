@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/header :: baseHead(~{::title})">
+    <title>New Admin user</title>
+</head>
+<body>
+<nav th:replace="fragments/navNoSearch :: nav"></nav>
+<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+<div class="container">
+    <div class="row">
+        <div class="row-md-12">
+            <h1>Add new admin</h1>
+            <p><b>Your username:</b> <span sec:authentication="name"></span></p>
+
+            <!--/*@thymesVar id="newUser" type="company.model.security.User"*/-->
+            <form th:object="${newUser}" th:action="@{/createAdmin}" method="post"
+                  sec:authorize="hasAuthority('admin.create')">
+
+                <!--/*@thymesVar id="newAdmin" type="company.model.security.AdminUser"*/-->
+                <div th:object="${newAdmin}">
+                    <label>Admin's full name: </label>
+                    <input size="50" type="text" th:field="*{adminUserName}"/>
+                    <span class="help-block" th:if="${#fields.hasErrors('adminUserName')}">
+                        <ul>
+                            <li class="alert-warning" th:each="err : ${#fields.errors('adminUserName')}" th:text="${err}">Error</li>
+                        </ul>
+                    </span>
+                </div>
+                <div>
+                    <label>Workflow username: </label>
+                    <input size="50" type="text" th:field="*{username}"/>
+                    <span class="help-block" th:if="${#fields.hasErrors('username')}">
+                        <ul>
+                            <li class="alert-warning" th:each="err : ${#fields.errors('username')}" th:text="${err}">Error</li>
+                        </ul>
+                    </span>
+                </div>
+                <div>
+                    <label>Workflow password: </label>
+                    <input size="50" type="password" th:field="*{password}"/>
+                    <span class="help-block" th:if="${#fields.hasErrors('password')}">
+                        <ul>
+                            <li class="alert-warning" th:each="err : ${#fields.errors('password')}" th:text="${err}">Error</li>
+                        </ul>
+                    </span>
+                </div>
+                <div>
+                    <input style="width: 200px" type="submit" value="Submit"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+
+</body>
+</html>

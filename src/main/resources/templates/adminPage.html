@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/header :: baseHead(~{::title})">
+    <title>Admin page</title>
+</head>
+<body>
+<nav th:replace="fragments/navNoSearch :: nav"></nav>
+
+<div class="container">
+    <div class="row">
+        <div class="row-md-12">
+            <h1>Admin page</h1>
+            <p><b>Your ID:</b> <span th:text="${userID}"></span> <b>Your username:</b> <span sec:authentication="name"></span></p>
+
+            <p><b>Your permissions:</b> <span sec:authentication="principal.authorities"></span></p>
+            <hr>
+
+            <h3>AdminUsers on file</h3>
+            <p sec:authorize="hasAuthority('admin.update')">Click an ID to edit or delete a user</p>
+            <table class="table table-sm">
+                <tr>
+                    <th>Admin ID</th>
+                    <th>Admin username</th>
+                </tr>
+                <!--/*@thymesVar id="adminUser" type="company.model.security.User"*/-->
+                <tr th:each="adminUser: ${AdminUsersFound}">
+                    <td><a sec:authorize="hasAuthority('admin.update')"
+                           th:href="@{/updateAdmin/{userId}(userId=${adminUser.id})}" th:text="${adminUser.id}"></a></td>
+                    <td th:text="${adminUser.username}"></td>
+                </tr>
+            </table>
+            <form sec:authorize="hasAuthority('admin.create')" action="/createAdmin">
+                <input type="submit" value="New admin" style="width: 200px">
+            </form>
+            <br/>
+            <hr>
+
+            <h3>Clients on file</h3>
+            <p th:if="${!ClientUsersFound.isEmpty()}"
+               sec:authorize="hasAuthority('admin.update')">Click an ID to edit or delete a user</p>
+            <p th:unless="${!ClientUsersFound.isEmpty()}"
+               sec:authorize="hasAuthority('admin.update')">There are no clients on file</p>
+            <table class="table table-sm" th:if="${!ClientUsersFound.isEmpty()}">
+                <tr>
+                    <th>Client ID</th>
+                    <th>Client username</th>
+                </tr>
+                <!--/*@thymesVar id="clientUser" type="company.model.security.User"*/-->
+                <tr th:each="clientUser: ${ClientUsersFound}">
+                    <td><a sec:authorize="hasAuthority('admin.update')"
+                           th:href="@{/updateClient/{userId}(userId=${clientUser.id})}" th:text="${clientUser.id}"></a></td>
+                    <td th:text="${clientUser.username}"></td>
+                </tr>
+            </table>
+            <form sec:authorize="hasAuthority('admin.create')" action="/createClient">
+                <input type="submit" value="New client" style="width: 200px">
+            </form>
+
+            <hr>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+
+</body>
+</html>

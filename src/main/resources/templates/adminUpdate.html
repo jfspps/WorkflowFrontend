@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/header :: baseHead(~{::title})">
+    <title>Update Workflow user</title>
+</head>
+<body>
+<nav th:replace="fragments/navNoSearch :: nav"></nav>
+<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+<!-- HTML5 does not handle PUT or DELETE so note the workarounds in this template -->
+
+<div class="container">
+    <div class="row">
+        <div class="row-md-12">
+            <h1>Update current admin</h1>
+            <p><b>Your username:</b> <span sec:authentication="name"></span></p>
+            <p><b>Your permissions:</b> <span sec:authentication="authorities"></span></p>
+
+            <!--/*@thymesVar id="currentUser" type="company.model.security.User"*/-->
+            <form th:object="${currentUser}" th:action="@{/updateAdmin/{userID}(userID=${currentUser.id})}" method="post"
+                  sec:authorize="hasAuthority('admin.update')">
+
+                <!--/*@thymesVar id="currentAdminUser" type="company.model.security.AdminUser"*/-->
+                <div th:object="${currentAdminUser}">
+                    <label>Admin's full name: </label>
+                    <input size="50" type="text" th:field="*{adminUserName}"/>
+                    <span class="help-block">
+                        <!--/*@thymesVar id="adminUserNameError" type="java.lang.String"*/-->
+                        <p class="alert-warning" th:text="${adminUserNameError}">Error</p>
+                        <!--/*@thymesVar id="adminUserExists" type="java.lang.String"*/-->
+                        <p class="alert-warning" th:text="${adminUserExists}">Error</p>
+                    </span>
+                </div>
+                <div>
+                    <label>Workflow username: </label>
+                    <input size="50" type="text" th:field="*{username}"/>
+                    <span class="help-block">
+                        <!--/*@thymesVar id="usernameError" type="java.lang.String"*/-->
+                        <p class="alert-warning" th:text="${usernameError}">Error</p>
+                        <!--/*@thymesVar id="usernameExists" type="java.lang.String"*/-->
+                        <p class="alert-warning" th:text="${usernameExists}">Error</p>
+                    </span>
+                </div>
+                <div>
+                    <p th:text="${'Account created: ' + currentUser.getCreatedDate()}">
+                </div>
+                <div>
+                    <p th:text="${'Account last modified: ' + currentUser.getLastModifiedDate()}"></p>
+                </div>
+                <div>
+                    <label>Account is enabled: </label>
+                    <input type="checkbox" th:field="*{enabled}" th:value="${currentUser.enabled}"/>
+                </div>
+                <div>
+                    <label>Account is not locked: </label>
+                    <input type="checkbox" th:field="*{accountNonLocked}" th:value="${currentUser.accountNonLocked}"/>
+                </div>
+                <div>
+                    <label>Account has not expired: </label>
+                    <input type="checkbox" th:field="*{accountNonExpired}" th:value="${currentUser.accountNonExpired}"/>
+                </div>
+                <div>
+                    <label>Account credentials have not expired: </label>
+                    <input type="checkbox" th:field="*{credentialsNonExpired}" th:value="${currentUser.credentialsNonExpired}"/>
+                </div>
+                <br/>
+                <div>
+                    <input style="width: 200px" type="submit" value="Submit"/>
+                    <input type="hidden" name="_method" value="put"/>
+                    <span class="help-block">
+                        <!--/*@thymesVar id="AdminUserSaved" type="java.lang.String"*/-->
+                        <p class="alert-success" th:text="${AdminUserSaved}">Error</p>
+                    </span>
+                </div>
+            </form>
+            <hr>
+
+            <form th:action="@{/resetPassword/{ID}(ID=${currentUser.id})}" method="post"
+                  sec:authorize="hasAuthority('admin.update')">
+                <input type="submit" value="Reset password" style="width: 200px"/>
+                <span class="help-block">
+                    <!--/*@thymesVar id="confirmReset" type="java.lang.String"*/-->
+                    <p class="alert-success" th:text="${confirmReset}">Done</p>
+                </span>
+            </form>
+            <hr>
+
+            <form th:object="${currentUser}" th:action="@{/changePassword/{userID}(userID=${currentUser.id})}" method="post"
+                  sec:authorize="hasAuthority('admin.update')">
+                <div>
+                    <label>Enter a new password: </label>
+                    <input size="50" name="newPassword" type="password" th:field="*{password}"/>
+                    <span class="help-block" th:if="${#fields.hasErrors('password')}">
+                        <ul>
+                            <li class="alert-warning" th:each="err : ${#fields.errors('password')}" th:text="${err}">Error</li>
+                        </ul>
+                    </span>
+                </div>
+                <div>
+                    <input type="hidden" name="_method" value="put" />
+                    <input type="submit" value="Change password" style="width: 200px"/>
+                </div>
+            </form>
+            <hr>
+
+            <form th:action="@{/deleteUser/{ID}(ID=${currentUser.id})}" method="post"
+                  sec:authorize="hasAuthority('admin.delete')">
+                <input type="hidden" name="_method" value="delete" />
+                <input type="submit" value="Delete user" style="width: 200px"/>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+
+</body>
+</html>

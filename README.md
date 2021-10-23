@@ -1,6 +1,6 @@
 # Workflow frontend prototype #
 
-This originally serves as a Spring-Security backed frontend to the Workflow engine (such as Camunda) though can be modified to interface with other web services as desired.
+This originally serves as a Spring-Security backed frontend to the Workflow engine (such as Camunda) though can be modified to interface with other web services as desired. It is an update to my previous project, [Weblogin](https://github.com/jfspps/Spring_weblogin).
 
 ## HTML5 PUT/DELETE ##
 
